@@ -1,0 +1,1367 @@
+بنحط داخل ملف 
+views
+
+فولدار اسمه
+
+layout
+جواته
+فولدار
+app.blade.php
+
+
+بنحط فيه كل اشي من هيدار وفوتار وامبورتات 
+cdn
+والخ
+
+و 
+class container
+
+بنخلي بس النص فاضي
+يعني ال 
+content
+
+
+<div class="container">
+    <div class="row">
+
+
+@yield('content')    //// هاض اهم اشي عشان يفهم انو اي اشي رح ينحط هون
+
+
+</div>
+
+
+
+//باختصار حط كل اشي زي ماهو 
+المكان اللي بدك تعدل تعبيه حطلو
+
+@yield ('')
+وحط الاسم اللي بدك اياه
+
+
+
+بعدين باحط بلصفحة اللي بعدها 3 شغلات
+وهم كالتالي
+-------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+index.blade.php
+-------------------------------------
+@extends('layout.app')
+
+@section('content')
+
+وهون حط اللي بدك اياه 
+
+@endsection
+
+-------------------------------------------------------------------
+------------------------------------------------------------------
+
+video #4
+
+
+
+        <td><a href="posts/1/edit" class="btn btn-info">Edit </a> </td>
+هي الحركة مقبولة
+
+
+Route::get('posts/{id}/edit',[PostController::class,'edit']);
+
+-------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+video #5
+
+
+
+
+php artisan make:model Post -m
+
+
+بنعمل موديل ومايغريشن 
+للبوست
+
+وبنسمي الداتابيس
+
+divio
+
+بل 
+.env
+
+C:\php8\php.ini
+شيل الكومنت
+extension=pdo_mysql
+
+
+
+-----------------------------------------------
+------------------------------------------------
+
+video #6
+
+
+هاض صفحة ال 
+add
+@extends('layout.app')
+
+@section('content')
+<div class="col-12">
+
+    <center class="mt-4">
+        <h1>Add Post</h1>
+    </center>
+</div>
+
+<div class="col-8 mx-auto">
+    <form action="{{ url('posts') }}" method="POST" class="form border p-3">
+        @csrf
+        <div class="mb-3">
+            <label for="title">Post Title</label>
+            <input type="text" class="form-control" name="title" id="title">
+        </div>
+        <div class="mb-3">
+            <label for="description">Post Description</label>
+            <textarea class="form-control" name="description" id="description" rows="7"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="user_id">Writer</label>
+            <select name="user_id" class="form-control" id="user_id">
+                <option value="1">Mostafa</option>
+                <option value="2">Ali</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="form-control btn btn-primary">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+@endsection
+
+
+
+وهاض الراوتر تاعها للاكشن
+Route::post('posts', [PostController::class, 'store']);
+
+
+وهاض هو الكونترولر تاعها
+public function store(Request $request)
+{
+
+dd($request)->all();
+
+    //dd($request->all());
+
+}
+
+------------------------------------------------------------------------
+--------------------------------------------------------------------------
+
+#7  video   validation
+
+
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|min:3',
+            'description' => 'required|string|max:1500',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+
+-------------------------------------------------------------
+--------------------------------------------------------------
+ضع هذا الكود برأس الفورم	
+
+<div class="col-8 mx-auto">
+    <form action="{{ url('posts') }}" method="POST" class="form border p-3">
+        @csrf
+        @if($errors->any())
+            <div class="alert alert-danger p-1">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+---------------------------------------------------------------------------------
+https://laravel.com/docs/11.x/validation
+----------------------------------------------------------------------------------
+----------------------------------------------------------------------------
+عشان يضل الانبوت جوات الفورم بنعمل التالي
+
+
+@extends('layout.app')
+
+@section('content')
+<div class="col-12">
+
+    <center class="mt-4">
+        <h1>Add Post</h1>
+    </center>
+</div>
+
+<div class="col-8 mx-auto">
+    <form action="{{ url('posts') }}" method="POST" class="form border p-3">
+        @csrf
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+        <div class="mb-3">
+            <label for="title">Post Title</label>
+            <input type="text" class="form-control" name="title" id="title"
+            value="old{{ 'title' }}">     ////////////////////////////////////////// لاحظ بلانبوت بنحط الاولد بل فاليو
+
+        </div>
+        <div class="mb-3">
+            <label for="description">Post Description</label>
+            <textarea
+            class="form-control" name="description"  rows="7"
+            >{{ old('description') }}</textarea>    //////////////// لاحظ بالتيكسيت اريا بنحط الاولد جوات التاغ بينهم يعني
+        </div>
+        <div class="mb-3">
+            <label for="user_id">Writer</label>
+            <select name="user_id" class="form-control" id="user_id">
+                <option value="1">Mostafa</option>
+                <option value="2">Ali</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="form-control btn btn-primary">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+@endsection
+
+
+هاض الحكي كلو بتلاقيه هون https://laravel.com/docs/11.x/validation
+
+----------------------------------------------------
+        <div class="mb-3">
+            <label for="user_id">Writer</label>
+            <select name="user_id" class="form-control" id="user_id">         //user_id  ==
+                <option value="1">Mostafa</option>
+                <option value="2">Ali</option>
+            </select>
+        </div>
+
+لازم يكزن بلداتا بيس الفاليو هو نفس االاي دي اللي بلداتا بيس
+يعني بتيبل ال
+users
+
+لأنو
+        'user_id' => 'required|exists:users,id',
+انتا هون بالكونترولر قايللو الريكوايرد متاخده من الاي دي من تيبل اليوزرز
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#video  8    insert to database
+
+
+بتحط هي فوق اهم اشي
+
+use App\Models\Post;
+
+
+بعدين
+
+------------------
+PostController
+-------------------
+
+
+public function store(Request $request)
+{
+
+    $request->validate([
+        'title' => 'required|string|min:3',
+        'description' => 'required|string|max:1500',
+        'user_id' => 'required|exists:users,id',
+    ]);
+
+    $obj = new Post();
+    $obj->title=$request->title;
+    $obj->description=$request->description;
+    $obj->user_id=$request->user_id;
+    $obj->save();
+    return back()->with('success','Post Added Successfuly');
+}
+
+
+    @if (session()->get('success')!=null)
+    <h3 class='text-success'>{{session()->get('success')}}</h3>
+     @endif
+
+
+
+
+
+
+<div class="col-8 mx-auto">
+    <form action="{{ url('posts') }}" method="POST" class="form border p-3">
+        @csrf
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+
+    @endif
+
+    @if (session()->get('success')!=null)
+    <h3 class='text-success'>{{session()->get('success')}}</h3>
+     @endif
+
+
+
+إليك شرحًا مفصلًا:
+
+@if (session()->get('success')!=null): هذا الشرط يستخدم للتحقق مما إذا كانت هناك قيمة في الجلسة (session) تحت المفتاح 'success'. إذا كانت هذه القيمة غير null (أي موجودة)، سيتم تنفيذ الكود داخل الـ @if.
+
+session()->get('success'): هذا يستدعي قيمة المخزنة في الجلسة تحت المفتاح 'success'.
+
+<h3 class='text-success'>{{session()->get('success')}}</h3>: إذا كان الشرط صحيحًا، يتم عرض رسالة النجاح المخزنة في الجلسة داخل عنصر <h3>. يتم تعيين الصنف class='text-success' لتطبيق التنسيق على النص، مما يعني عادةً أن النص سيظهر باللون الأخضر.
+
+
+تذكر هاذا كان شكل الكونترولر
+    return back()->with('success','Post Added Successfuly');
+
+
+
+
+
+في هذا المثال، يتم استخدام الجلسة session() للتحقق مما إذا كانت هناك رسالة نجاح تم تخزينها سابقًا في الجلسة تحت المفتاح 'success'. إذا كانت هذه الرسالة موجودة، يتم عرضها للمستخدم. استخدام الجلسة هنا يسمح لك بتخزين معلومات مثل رسائل التأكيد، الأخطاء، أو غيرها من البيانات التي تحتاج أن تكون متاحة بعد إعادة توجيه المستخدم أو تحميل صفحة جديدة
+
+
+السبب في اختفاء رسالة "Post Added Successfully" بعد عمل ريفريش للصفحة هو أن الرسالة مخزنة في الجلسة (session) باستخدام with في طريقة store، والتي تعتبر Flash Data في Laravel. Flash Data يتم تخزينها في الجلسة ولكن فقط لجلسة واحدة (أي للطلب التالي فقط). بمجرد عرض الرسالة للمستخدم وتحديث الصفحة، يتم إزالة البيانات من الجلسة تلقائيًا، ولهذا السبب تختفي الرسالة بعد عمل ريفريش.
+
+كيف تعمل Flash Data في Laravel:
+Flash Data: يتم تخزينها في الجلسة لفترة قصيرة جدًا، عادة لجلسة واحدة فقط. هذا يعني أنه يمكن عرض الرسالة مرة واحدة فقط، وعند تحديث الصفحة تختفي لأن الجلسة لا تخزنها مرة أخرى.
+
+
+php
+Copy code
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+هذا الكود سيعرض الرسالة إذا كانت موجودة في الجلسة.
+بالتالي، تُعرف هذه الرسالة بأنها "Flash Message" لأن Laravel يستخدم الـ with method لنقل البيانات عبر إعادة التوجيه من خلال الجلسة، والتي يتم عرضها مؤقتًا في الطلب التالي.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+#Video    9
+
+
+https://laravel.com/docs/11.x/controllers
+جدول بوضح
+
+ال
+post
+delete
+put
+والخ
+
+
+
+--------------------
+@extends('layout.app')
+
+@section('content')
+<div class="col-12">
+    <a href="/posts/create" class="btn btn-primary my-3">Add New Post</a>
+    <center class="mt-4"><h1>All Posts</h1></center>
+</div>
+
+
+<table class="table table-bordered">
+    @if (session()->get('success')!=null)
+    <center><h3 class='text-success'>{{session()->get('success')}}</h3></center>
+     @endif
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Writer_id</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($posts as $post)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $post->title }}</td>
+                <td>{{ $post->description }}</td>
+                <td>{{ $post->user_id }}</td>
+                <td><a href="posts/{{ $post->id }}/edit" class="btn btn-info">Edit</a></td>
+                <td>
+                    <form action="{{ url('posts/' . $post->id) }}"
+                        method="post">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+@endsection
+---------------------------------
+
+بلمختصر هذا هو الراوتر
+
+Route::delete('posts/{id}', [PostController::class, 'destroy']);
+--------------------------------------------------------------
+
+هذا هو الكونترولر
+public function destroy($id)
+{
+    $post = Post::findOrFail($id);
+    $post->delete();
+     return back()->with('success', 'Post Deleted Successfully');
+}
+------------------------------------------------------------------------
+وهذا هو
+داخل الفورم
+
+<table class="table table-bordered">
+    @if (session()->has('success'))
+    <center><h3 class="text-success">{{ session('success') }}</h3></center>
+
+
+
+   <tbody>
+        @foreach ($posts as $post)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $post->title }}</td>
+                <td>{{ $post->description }}</td>
+                <td>{{ $post->user_id }}</td>
+                <td><a href="posts/{{ $post->id }}/edit" class="btn btn-info">Edit</a></td>
+                <td>
+                    <form action="{{ url('posts/' . $post->id) }}"
+                        method="post">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+
+----------------------------------
+
+
+
+هذا شكل التيبل
+<table class="table table-bordered">
+    @if (session()->has('success'))
+    <center><h3 class="text-success">{{ session('success') }}</h3></center>
+@endif
+    <thead>
+        <tr>              //table row
+            <th>#</th>
+            <th>Title</th>         //  table head cell
+            <th>Description</th>
+            <th>Writer_id</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ()                      //لاحظ مكان الفور ايتش بداخل تي بودي
+            <tr>                       //table row
+                <td></td>
+                <td></td>            //table data
+                <td></td>
+                <td></td>
+                <td><a href="posts/{{ $post->id }}/edit" class="btn btn-info">Edit</a></td>
+                <td>
+                    <form action="{{ url('posts/' . $post->id) }}"
+                        method="post">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
+
+
+
+session()->has('key')
+ 
+ستخدم للتحقق مما إذا كانت هناك بيانات مخزنة في الـ 
+session 
+
+تحت المفتاح المحدد
+ ('key').
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+
+#update video  #10
+
+-----------------------------------------------
+
+Route::get('posts/{id}/edit',[PostController::class,'edit']); 222222222222222222222222222222222222222222
+
+Route::put('posts/{id}',[PostController::class,'update']); 7777777777777777777777777
+
+----------------------------------------------------
+
+public function edit ($id){   333333333333333333333333333333333333333333333333333333333333
+
+$post=Post::findOrFail($id);
+return view('posts.edit',['post'=>$post,'id'=>$id]);
+
+}
+
+
+public function update($id, Request $request)                       8888888888888888888888888888888888888888  اعمل سيف للريكويستس ووديهم عالداتابيس ورجعني عال بوستس انديكس
+{
+    // Find the post by its ID or fail if it doesn't exist
+    $obj = Post::findOrFail($id);
+
+    // Update the post's title and description with the data from the request
+    $obj->title = $request->title;
+    $obj->description = $request->description;
+    $obj->save();
+    // Dump and die - output the $obj object and halt further execution
+    return redirect('posts')->with('success','post updated Successfully');
+}
+
+
+-----------------------------------------------
+index.php
+-----------------------------------------------
+
+@extends('layout.app')
+
+@section('content')
+<div class="col-12">
+    <a href="/posts/create" class="btn btn-primary my-3">Add New Post</a>
+    <center class="mt-4"><h1>All Posts</h1></center>
+</div>
+
+
+<table class="table table-bordered">
+    @if (session()->has('success'))
+    <center><h3 class='text-success'>{{session('success')}}</h3></center>
+     @endif
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Writer_id</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($posts as $post)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $post->title }}</td>
+                <td>{{ $post->description }}</td>
+                <td>{{ $post->user_id }}</td>
+
+                <td><a href="posts/{{ $post->id }}/edit" class="btn btn-info">Edit</a></td>   /////// وديني عكونترولر الايديت1 1111111
+                <td>
+                    <form action="{{ url('posts/' . $post->id) }}"
+                        method="post">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+@endsection
+
+
+-----------------------------------------------------
+edit.php
+---------------------------------------------
+4444444444444444444444444444444444444444444444444444444444 بيجي على هاي الصفحة
+@extends('layout.app')
+
+@section('content')
+<div class="col-12">
+
+    <center class="mt-4">
+        <h1>Add Post</h1>
+    </center>
+</div>
+
+<div class="col-8 mx-auto">
+    <form action="{{ url('posts/'.$id) }}" method="POST" class="form border p-3">   55555555555555555555555555555وديني على كونترولر الابديتن 
+        @method('Put')
+        @csrf
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    @if (session()->has('success'))
+    <h3 class='text-success'>{{ session('success') }}</h3>
+@endif
+
+        <div class="mb-3">
+            <label for="title">Post Title</label>
+            <input type="text" class="form-control" name="title" id="title"
+            value="{{ $post->title }}">
+
+        </div>
+        <div class="mb-3">
+            <label for="description">Post Description</label>
+            <textarea
+            class="form-control" name="description"  rows="7">{{$post->description }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="user_id">Writer</label>
+            <select name="user_id" class="form-control" id="user_id">
+                <option value="1">Mostafa</option>
+                <option value="2">Ali</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="form-control btn btn-primary">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+@endsection
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+
+
+	#12        show single post 
+
+
+homePage
+
+
+@extends('layout.app')
+
+@section('content')
+
+<div class="col-12 mt-5">
+
+    @foreach ($posts as $post)
+    <div class="card">
+        <span class="m-2">ID:{{ $post->id }} - {{ $post->created_at->format('Y-m-d') }}</span>    
+        <hr>
+        <div class="card-body">
+          <h5 class="card-title">{{ $post->title }}</h5>
+          <p class="card-text">{{ \Str::limit($post->description,50) }}</p>    //helper function (\Str::limit($post->description,50))
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+      @endforeach
+
+</div>
+
+@endsection
+
+
+
+
+
+-----------------------------
+
+public function home (){
+
+$posts=Post::all();
+return view('home',['posts'=>$posts]);
+
+
+}----------------------
+Route::get('/',[PostController::class,'home']);
+
+
+
+-------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+Helper Function 
+----------------------------------------------------------
+------------------------------------------------------
+--------------------------------------------------------------------
+في Laravel، "هيلبر فنكشن" أو "Helper Function" هي دوال مساعدة تُستخدم لتسهيل وتبسيط المهام الشائعة في التطبيق. هذه الدوال تُعتبر اختصارات للقيام بوظائف معينة، وتكون متاحة بشكل عام في أي جزء من التطبيق دون الحاجة إلى استدعاء أو تضمين أي ملفات بشكل مباشر.
+
+
+
+
+
+      ---------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------
+#video 13
+
+
+لاحظ كيف انك الان عندك القدرة على الوصول لليوزر اي دي
+ولليوزر نيم
+منخلال موديل ال
+post
+
+        <span class="m-2">User_ID:{{ $post->user_id }} - {{ $post->created_at->format('Y-m-d') }}</span>
+        <span class="m-2">UserName:{{ $post->user->name }} - {{ $post->created_at->format('Y-m-d') }}</span>
+        <span class="m-2">userEmail:{{ $post->user->email }} </span>
+        <span class="m-2">userpassword:{{ $post->user->password}} </span>
+
+
+عشان نقدر نعمل هاض الحكي بدنا بس شغلتين
+
+
+داخل الموديل كلاس بوست
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Post extends Model
+{
+    use HasFactory;
+
+
+
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+
+
+-----------
+وكمان داخل ميغريشن البوست
+
+  public function up(): void
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->text('description');
+            $table->foreignId('user_id');
+            $table->timestamps();
+        });
+    }
+
+
+---------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+	
+السبب في أنك لم تحتاج إلى تعريف العلاقة hasMany في نموذج User هو لأنك كنت تعمل مع العلاقة من جانب المنشور (Post)، وليس من جانب المستخدم (User).
+
+توضيح العلاقات في Laravel:
+belongsTo في نموذج Post:
+
+عندما تعرف العلاقة belongsTo في نموذج Post، فإنك تقول إن كل منشور ينتمي إلى مستخدم واحد. هذا هو الجانب "العكسي" للعلاقة hasMany. وبالتالي، يمكنك الوصول إلى بيانات المستخدم المرتبط بمنشور معين.
+مثال: {{ $post->user->name }}
+hasMany في نموذج User:
+
+عندما تعرف العلاقة hasMany في نموذج User، فإنك تقول إن المستخدم يمكن أن يكون لديه العديد من المنشورات. هذه العلاقة ضرورية إذا كنت ترغب في الحصول على جميع المنشورات التي تخص مستخدمًا معينًا.
+مثال: {{ $user->posts }} ستجلب جميع المنشورات المرتبطة بهذا المستخدم.
+متى تستخدم hasMany:
+hasMany تُستخدم عندما تحتاج إلى استرجاع جميع المنشورات (أو أي موارد أخرى) التي تخص مستخدمًا معينًا.
+إذا كنت تعمل على جانب المستخدم وتريد جلب كل المنشورات التي كتبها المستخدم، فستحتاج إلى استخدام العلاقة hasMany في نموذج User.
+مثال على استخدام hasMany:
+php
+Copy code
+class User extends Model
+{
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+}
+باستخدام هذه العلاقة، يمكنك الآن جلب جميع المنشورات التي تخص مستخدمًا معينًا:
+
+php
+Copy code
+$user = User::find(1);
+$posts = $user->posts;
+ملخص:
+belongsTo في نموذج Post كافٍ للوصول إلى المستخدم المرتبط بمنشور معين.
+hasMany في نموذج User ضروري إذا كنت ترغب في الوصول إلى جميع المنشورات المرتبطة بمستخدم معين.
+
+
+
+---------------------------------------------------------------------
+-----------------------------------------------------------------------
+------------------------------------------------------------------
+#video  #14         factory ----- seeders ---------- pagination
+-----------------------------------------------------------------
+--------------------------------------------------------------------
+-----------------------------------------------------------------------
+لاضافة دامي داتا
+
+نستخدم فاكتوري وسيدارز
+
+
+نربط الفاكتوري بلموديل اللي عنا
+php artisan make:factory PostFactory --model=Post
+
+
+
+بعدين بروح هال
+seeders
+
+
+بحط التالي
+
+
+
+
+
+
+
+
+    public function run(): void
+    {
+        // \App\Models\User::factory(10)->create();
+        *********************************************\App\Models\Post::factory()->count(100)->create();
+
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+    }
+
+
+
+
+بعدين عالتريمينال
+ php artisan db:seed
+
+
+--------------------------------------------------------------
+---------------------------------------------------------------
+
+او من ال tinker
+
+-----------------------------
+هسا بدنا نعمل
+
+pagination
+public function index (){
+
+$posts =Post::paginate();
+
+
+   بنعملها كالتالي
+public function index (){
+
+$posts =Post::paginate();    //بتصيير ترجعلك اياهم 15 سطر او 15 
+
+    كان هيك شكلها
+
+public function index (){
+
+$posts =Post::all();
+
+
+
+----------------------------------------------------
+---------------------------------------------------------------------
+جوات ال providers
+
+App/providers/AppServiceProviders
+
+
+use Illuminate\Pagination\Paginator;
+ public function boot(): void
+    {
+
+        Paginator::useBootstrapFive();    /or    Paginator::useBootstrap();
+    }
+
+
+
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+بعدين بنروح عالبليد تاعنا
+
+
+{{ $posts->links() }}
+
+
+--------------------------------------------------
+---------------------------------------------------------
+
+#15   video           search
+
+
+view
+---------------------------------------------------------------------------------------------------------------------------------------------
+					هاض هو شكل السيرش في النافبار بدون اي تعقيدات
+
+        <form  class="d-flex"action="{{url("posts/search")  }}" method="get">
+            <input  class="form-control me-2" type="search" name="q" placeholder="Search">
+            <button type="submit">Search</button>
+        </form>
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+بعدين بنحط بلفيو 
+نفس صفحة الهوم بس بنشيل الباجينيشن من الفيو
+
+
+@extends('layout.app')
+
+@section('content')
+
+<div class="col-12 mt-5">
+
+    @foreach ($posts as $post)
+    <div class="card">
+        <span class="m-2">{{ $post->user->name }} - {{ $post->created_at->format('Y-m-d') }}</span>
+        <hr>
+        <div class="card-body">
+          <h5 class="card-title">{{ $post->title }}</h5>
+          <p class="card-text">{{ Str::limit($post->description,50) }}</p>
+
+
+
+          <a href="posts/{{ $post->id }}" class="btn btn-primary">Show Post</a>
+        </div>
+      </div>
+      @endforeach
+
+</div>
+<div>
+</div>
+@endsection
+
+
+
+------------------------------------------------------------------------------------------------------------------
+بعدين الراوت هيك شكلو
+
+Route::get('posts/search',[PostController::class,'search']);
+
+-------------------------------------------------
+الكونترولر هيك شكلو
+
+    public function search (Request $request){
+$q=$request->q;
+$posts=Post::where('description','LIKE','%'.$q.'%')->get();
+ return view('posts.search',['posts'=>$posts]);
+        }
+------------------------------------------------------------
+    public function search (Request $request){
+$q=$request->q;
+$posts=Post::where('description','LIKE','%'.$q.'%')->get();   //////////// اهم نقطة بالدرس
+ return view('posts.search',['posts'=>$posts]);
+        }
+-----------------------------------------------------------------------------------------
+
+*************************************************************************************************
+**************************************************************************************************
+level 2    #1   users module   view all users
+***********************************************************************************************
+***********************************************************************************************
+users migrations
+------------------------------
+
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->enum('type',['admin','writer'])->default('admin');   //عدل هون ضروري 
+
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+
+------------------------------------------------------------------------------------------------------
+
+
+
+php artisan make:controller UserController --resource
+
+
+بنعطينا الصفحة تاعت الكونترولر بشكل ممتاز جداً جاهز للاضافة
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+}
+
+--------------------------------------------------------------------------------------------------------
+
+Route::resource('users',UserController::class);
+
+
+هيك رح يفهم انو لازم يجيبلك كل اشي بدك اياه بلزبط
+كراوت
+
+
+بعدين بتكتب
+
+php artisan route:list
+
+
+
+
+
+  GET|HEAD        / ...................................................................................................... PostController@home
+  POST            _ignition/execute-solution ................... ignition.executeSolution › Spatie\LaravelIgnition › ExecuteSolutionController
+  GET|HEAD        _ignition/health-check ............................... ignition.healthCheck › Spatie\LaravelIgnition › HealthCheckController
+  POST            _ignition/update-config ............................ ignition.updateConfig › Spatie\LaravelIgnition › UpdateConfigController
+  GET|HEAD        api/user ................................................................................................................... 
+  GET|HEAD        posts ................................................................................................. PostController@index
+  POST            posts ................................................................................................. PostController@store  
+  GET|HEAD        posts/create ......................................................................................... PostController@create  
+  GET|HEAD        posts/search ......................................................................................... PostController@search  
+  GET|HEAD        posts/{id} ............................................................................................. PostController@show  
+  PUT             posts/{id} ........................................................................................... PostController@update  
+  DELETE          posts/{id} ......................................................................................... PostController@destroy3  
+  GET|HEAD        posts/{id}/edit ........................................................................................ PostController@edit  
+  GET|HEAD        sanctum/csrf-cookie ...................................... sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show  
+  GET|HEAD        users ................................................................................... users.index › UserController@index  
+  POST            users ................................................................................... users.store › UserController@store  
+  GET|HEAD        users/create .......................................................................... users.create › UserController@create  
+  GET|HEAD        users/{user} .............................................................................. users.show › UserController@show  
+  PUT|PATCH       users/{user} .......................................................................... users.update › UserController@update  
+  DELETE          users/{user} ........................................................................ users.destroy › UserController@destroy  
+  GET|HEAD        users/{user}/edit ......................................................................... users.edit › UserController@edit  
+
+----------------------------------------------------------
+----------------------------------------------------------
+
+#video #4
+
+
+صفحة ال
+create user
+
+     public function index()
+     {
+         $users = User::orderBy('id','DESC')->paginate();
+
+         return view('users.index', ['users' => $users]);
+     }
+
+
+    public function create()
+    {
+
+
+        return view('users.create');
+
+    }
+
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|min:3|max:100',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6|max:30',
+            'password_confirmation' => 'required|string|min:6|max:30|same:password',
+            'type' => 'required|in:admin,writer',
+        ]);
+        User::create($data);
+        return back()->with('success','Data Added Successfuly');
+    }
+
+
+
+----------------------------------------------------------------------------
+لازم تروح عال
+$fillable
+لمن بدك تعمل انسيرت
+
+<?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [  ///////////////////////////////////////////////////// ديما عند الكرييت روح لل فيلابول
+        'name',
+        'email',
+        'password',
+        'type'   /////////////////////////////////////////////////////////////////
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+}
+
+
+
+--------------------------------------------------------
+---------------------------------------------
+
+
+-----------------------------------------------------------------------------
+
+بنروح عال
+User Model
+
+
+public function type(){
+
+if($this->type=='admin'){
+return '<span class="badge bg-success"> Admin</span>';
+
+}else{
+    return '<span class="badge bg-warning">Writer </span>';
+
+}
+
+}
+
+
+or
+public function type(){
+
+if($this->type=='admin'){
+return '<span class="badge bg-success"> $this->type</span>';
+
+}else{
+    return '<span class="badge bg-warning">$this->type </span>';
+
+}
+
+}
+
+
+
+بعدين بتروح عالتيبل اللي 
+users.index
+
+
+<table class="table table-bordered">
+    @if (session()->has('success'))
+    <center><h3 class='text-success'>{{session('success')}}</h3></center>
+     @endif
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Type</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($users as $user)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td>{!!$user->type()!!}</td>      //////////////////////////////////////////////// {!!$user->type()!!}
+
+                <td><a href="{{ route('users.edit',$user->id) }}" class="btn btn-info">Edit</a></td>
+                <td>
+                    <form action="{{ route('users.destroy',$user->id) }}"
+                        method="post">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+لاحظ هنالك فرق بين 
+save
+create
+
+public function store(Request $request)
+{
+    $data = $request->validate([
+        'name' => 'required|string|min:3|max:100',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:6|max:30',
+        'password_confirmation' => 'required|string|min:6|max:30|same:password',
+        'type' => 'required|in:admin,writer',
+    ]);
+
+    $user = new User();
+    $user->name = $data['name'];
+    $user->email = $data['email'];
+    $user->password = bcrypt($data['password']); // تأكد من تشفير كلمة المرور
+    $user->type = $data['type'];
+    $user->save();
+
+    return back()->with('success', 'Data Added Successfully');
+}
+
+
+---------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------
+#5 deleteUser
+
+
+    public function destroy(string $id)
+    {
+
+$obj = User::findOrFail($id);
+$obj->delete();
+return back()->with('success','Post is deleted');
+    }
+
+
+----------------------------------------------------------------
+-----------------------------------------------------------------
+users.index
+
+  <form action="{{ route('users.destroy',$user->id) }}"
+                        method="post">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+
+
+--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
